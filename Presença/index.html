@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Presença</title>
+    <script>
+        async function verificarUsuario() {
+            let userAgent = navigator.userAgent;
+            let ip = await fetch('https://api64.ipify.org?format=json').then(res => res.json()).then(data => data.ip);
+            let dados = { userAgent, ip };
+
+            let resposta = await fetch('https://script.google.com/macros/s/SEU_SCRIPT_ID/exec', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            }).then(res => res.json());
+
+            if (resposta.nome) {
+                document.getElementById("mensagem").innerText = `Seja bem-vindo, ${resposta.nome}!`;
+                registrarPresenca(dados);
+            } else {
+                window.location.href = "cadastro.html";
+            }
+        }
+
+        function registrarPresenca(dados) {
+            fetch('https://script.google.com/macros/s/SEU_SCRIPT_ID/exec', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...dados, registrar: true })
+            });
+        }
+    </script>
+</head>
+<body onload="verificarUsuario()">
+    <h1>Registro de Presença</h1>
+    <p id="mensagem">Verificando...</p>
+</body>
+</html>

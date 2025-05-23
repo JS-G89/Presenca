@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Participante</title>
+    <script>
+        async function cadastrarUsuario() {
+            let nome = document.getElementById("nome").value;
+            let userAgent = navigator.userAgent;
+            let ip = await fetch('https://api64.ipify.org?format=json').then(res => res.json()).then(data => data.ip);
+
+            let dados = { nome, userAgent, ip, novoUsuario: true };
+
+            fetch('https://script.google.com/macros/s/SEU_SCRIPT_ID/exec', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            }).then(() => {
+                window.location.href = "index.html";
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Olá, sua primeira vez aqui!</h1>
+    <p>Digite seu nome para se registrar:</p>
+    <input type="text" id="nome">
+    <button onclick="cadastrarUsuario()">OK</button>
+</body>
+</html>
