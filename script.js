@@ -10,7 +10,7 @@ async function verificarUsuario() {
 
         let dados = { userAgent, ip };
 
-        let resposta = await fetch('https://script.google.com/macros/s/AKfycbzR064RZ1a8nWDO56eQOqxSHjXM53tTudJk1mBSigLSOWBxZLbsLwLNx2OTGBip0nLz/exec', {
+        let resposta = await fetch('https://script.google.com/macros/s/AKfycbwHWU0tjeEFRTAX2uSc7zYIkMtjLAdgKSBYJZSYcuBAr2VMt5M9IklMY0ZYL5FR0ME8/exec', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dados)
@@ -30,7 +30,7 @@ async function verificarUsuario() {
 
 async function registrarPresenca(dados) {
     try {
-        await fetch('https://script.google.com/macros/s/AKfycbzR064RZ1a8nWDO56eQOqxSHjXM53tTudJk1mBSigLSOWBxZLbsLwLNx2OTGBip0nLz/exec', {
+        await fetch('https://script.google.com/macros/s/AKfycbwHWU0tjeEFRTAX2uSc7zYIkMtjLAdgKSBYJZSYcuBAr2VMt5M9IklMY0ZYL5FR0ME8/exec', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ...dados, registrar: true })
