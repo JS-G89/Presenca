@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 
         let userAgent = navigator.userAgent;
         
-        // 🔹 Captura IP do usuário
+        // 🔹 Captura o IP do usuário
         let ipResponse = await fetch('https://api.ipify.org?format=json');
         if (!ipResponse.ok) throw new Error("Falha ao obter IP");
         let ipData = await ipResponse.json();
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 
         console.log("🔹 Enviando dados ao servidor:", JSON.stringify(dados));
 
-        // 🔹 Faz a requisição ao Google Apps Script para verificar usuário
+        // 🔹 Faz a requisição ao Google Apps Script
         let response = await fetch('https://script.google.com/macros/s/AKfycbxdgGvOoWhAVHlMrdkRXhKUQeONiy0Jj8dHGqzQZQhRB1TeripXzNAj0w8Xre6VXNnt/exec', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -77,4 +77,3 @@ async function registrarPresenca(dados) {
         console.error("Erro ao registrar presença:", error);
     }
 }
-
