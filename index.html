@@ -7,12 +7,15 @@
     <style>
         body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
         input, button { margin: 10px; padding: 10px; font-size: 16px; }
-        #resultado { margin-top: 20px; font-weight: bold; }
+        #mensagem { margin-top: 20px; font-weight: bold; }
+        #resultado { margin-top: 20px; white-space: pre-wrap; text-align: left; }
     </style>
 </head>
 <body>
 
     <h1>Registro de Presença</h1>
+    <div id="mensagem">Verificando usuário...</div>
+
     <form id="registroForm">
         <input type="text" id="nome" placeholder="Seu Nome" required>
         <button type="submit">Registrar Presença</button>
