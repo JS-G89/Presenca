@@ -4,32 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Presença</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        h1 {
+            color: #2E86C1;
+        }
+        #mensagem {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
     <script>
         async function verificarUsuario() {
-            let userAgent = navigator.userAgent;
-            let ip = await fetch('https://api64.ipify.org?format=json').then(res => res.json()).then(data => data.ip);
-            let dados = { userAgent, ip };
+            try {
+                let userAgent = navigator.userAgent;
+                let ip = await fetch('https://api64.ipify.org?format=json')
+                    .then(res => res.ok ? res.json() : { ip: "Desconhecido" })
+                    .then(data => data.ip);
 
-            let resposta = await fetch('https://script.google.com/macros/s/AKfycbz242dNY3p9o6j6uYD2zD27fANlBajEGAqINGx01GutssE6fscSZopGfcTo5QmG5Klo/exec', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dados)
-            }).then(res => res.json());
+                let dados = { userAgent, ip };
+                
+                let resposta = await fetch('https://script.google.com/macros/s/AKfycbz242dNY3p9o6j6uYD2zD27fANlBajEGAqINGx01GutssE6fscSZopGfcTo5QmG5Klo/exec', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dados)
+                }).then(res => res.json());
 
-            if (resposta.nome) {
-                document.getElementById("mensagem").innerText = `Seja bem-vindo, ${resposta.nome}!`;
-                registrarPresenca(dados);
-            } else {
-                window.location.href = "cadastro.html";
+                if (resposta.nome) {
+                    document.getElementById("mensagem").innerText = `Seja bem-vindo, ${resposta.nome}!`;
+                    registrarPresenca(dados);
+                } else {
+                    window.location.href = "cadastro.html";
+                }
+            } catch (error) {
+                console.error("Erro ao verificar usuário:", error);
+                document.getElementById("mensagem").innerText = "Erro ao verificar presença!";
             }
         }
 
-        function registrarPresenca(dados) {
-            fetch('https://script.google.com/macros/s/AKfycbz242dNY3p9o6j6uYD2zD27fANlBajEGAqINGx01GutssE6fscSZopGfcTo5QmG5Klo/exec', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...dados, registrar: true })
-            });
+        async function registrarPresenca(dados) {
+            try {
+                await fetch('https://script.google.com/macros/s/AKfycbz242dNY3p9o6j6uYD2zD27fANlBajEGAqINGx01GutssE6fscSZopGfcTo5QmG5Klo/exec', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...dados, registrar: true })
+                });
+            } catch (error) {
+                console.error("Erro ao registrar presença:", error);
+            }
         }
     </script>
 </head>
