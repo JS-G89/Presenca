@@ -3,29 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Participante</title>
+    <title>Cadastro de Usuário</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #2E86C1;
+        }
+        #mensagem {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #2E86C1;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1B4F72;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cadastro de Usuário</h1>
+    <p id="mensagem">Digite seu nome para se cadastrar:</p>
+    
+    <input type="text" id="nomeUsuario" placeholder="Seu nome">
+    <button onclick="cadastrarUsuario()">Cadastrar</button>
+
     <script>
         async function cadastrarUsuario() {
-            let nome = document.getElementById("nome").value;
+            let nome = document.getElementById("nomeUsuario").value.trim();
+
+            if (!nome) {
+                document.getElementById("mensagem").innerText = "Por favor, digite seu nome!";
+                return;
+            }
+
             let userAgent = navigator.userAgent;
-            let ip = await fetch('https://api64.ipify.org?format=json').then(res => res.json()).then(data => data.ip);
+            let ip = await fetch('https://api64.ipify.org?format=json')
+                .then(res => res.ok ? res.json() : { ip: "Desconhecido" })
+                .then(data => data.ip);
 
             let dados = { nome, userAgent, ip, novoUsuario: true };
 
-            fetch('https://script.google.com/macros/s/AKfycbxWSIz-Xjx4j9Gpfp7LqO4n6VhekfpDktUi3VlQw_zmTLK2SDi19-sYl7-XGp1nrWy4/exec', {
+            let resposta = await fetch('https://script.google.com/macros/s/AKfycbwHWU0tjeEFRTAX2uSc7zYIkMtjLAdgKSBYJZSYcuBAr2VMt5M9IklMY0ZYL5FR0ME8/exec', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dados)
-            }).then(() => {
-                window.location.href = "index.html";
-            });
+            }).then(res => res.json());
+
+            if (resposta.sucesso) {
+                document.getElementById("mensagem").innerText = resposta.mensagem;
+                setTimeout(() => window.location.href = "index.html", 2000);
+            } else {
+                document.getElementById("mensagem").innerText = "Erro ao cadastrar! Tente novamente.";
+            }
         }
     </script>
-</head>
-<body>
-    <h1>Olá, sua primeira vez aqui!</h1>
-    <p>Digite seu nome para se registrar:</p>
-    <input type="text" id="nome">
-    <button onclick="cadastrarUsuario()">OK</button>
 </body>
 </html>
