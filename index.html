@@ -24,51 +24,12 @@
             color: #888;
         }
     </style>
-    <script>
-        async function verificarUsuario() {
-            try {
-                document.getElementById("mensagem").innerText = "Verificando...";
-                document.getElementById("mensagem").classList.add("loading");
-
-                let userAgent = navigator.userAgent;
-                let ip = await fetch('https://api64.ipify.org?format=json')
-                    .then(res => res.ok ? res.json() : { ip: "Desconhecido" })
-                    .then(data => data.ip);
-
-                let dados = { userAgent, ip };
-                let resposta = await fetch('https://script.google.com/macros/s/AKfycbxWSIz-Xjx4j9Gpfp7LqO4n6VhekfpDktUi3VlQw_zmTLK2SDi19-sYl7-XGp1nrWy4/exec', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(dados)
-                }).then(res => res.json());
-
-                if (resposta.nome) {
-                    document.getElementById("mensagem").innerText = `Seja bem-vindo, ${resposta.nome}!`;
-                    registrarPresenca(dados);
-                } else {
-                    window.location.href = "cadastro.html";
-                }
-            } catch (error) {
-                console.error("Erro ao verificar usuário:", error);
-                document.getElementById("mensagem").innerText = "Erro ao verificar presença!";
-            }
-        }
-
-        async function registrarPresenca(dados) {
-            try {
-                await fetch('https://script.google.com/macros/s/AKfycbxWSIz-Xjx4j9Gpfp7LqO4n6VhekfpDktUi3VlQw_zmTLK2SDi19-sYl7-XGp1nrWy4/exec', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ...dados, registrar: true })
-                });
-            } catch (error) {
-                console.error("Erro ao registrar presença:", error);
-            }
-        }
-    </script>
 </head>
-<body onload="verificarUsuario()">
+<body>
     <h1>Registro de Presença</h1>
     <p id="mensagem" class="loading">Verificando...</p>
+
+    <!-- Importação do JavaScript separado -->
+    <script src="script.js"></script>
 </body>
 </html>
