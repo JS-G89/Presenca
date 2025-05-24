@@ -10,7 +10,6 @@ async function verificarUsuario() {
 
         let dados = { userAgent, ip };
 
-        // 🔹 Salva os dados localmente antes de qualquer requisição
         salvarLocalmente(dados);
 
         let resposta = await fetch('https://script.google.com/macros/s/AKfycbwHWU0tjeEFRTAX2uSc7zYIkMtjLAdgKSBYJZSYcuBAr2VMt5M9IklMY0ZYL5FR0ME8/exec', {
@@ -21,18 +20,19 @@ async function verificarUsuario() {
 
         if (resposta.nome) {
             document.getElementById("mensagem").innerText = `Seja bem-vindo, ${resposta.nome}!`;
+            registrarPresenca(dados);
         } else {
             window.location.href = "cadastro.html";
         }
     } catch (error) {
+        console.log("Erro detectado:", error); 
         console.error("Erro ao verificar usuário:", error);
         document.getElementById("mensagem").innerText = "Erro ao verificar presença!";
     }
 }
 
-// 🔹 Função para salvar os dados no LocalStorage
 function salvarLocalmente(dados) {
-    console.log("Tentando salvar no LocalStorage:", dados); // Teste
+    console.log("Tentando salvar no LocalStorage:", dados);
     if (dados && Object.keys(dados).length > 0) {
         localStorage.setItem("registroUsuario", JSON.stringify(dados));
         console.log("Dados salvos no LocalStorage com sucesso!");
@@ -41,5 +41,16 @@ function salvarLocalmente(dados) {
     }
 }
 
-// ✅ Executa automaticamente ao carregar a página
+async function registrarPresenca(dados) {
+    try {
+        await fetch('https://script.google.com/macros/s/AKfycbwHWU0tjeEFRTAX2uSc7zYIkMtjLAdgKSBYJZSYcuBAr2VMt5M9IklMY0ZYL5FR0ME8/exec', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...dados, registrar: true })
+        });
+    } catch (error) {
+        console.error("Erro ao registrar presença:", error);
+    }
+}
+
 window.onload = verificarUsuario;
