@@ -4,9 +4,11 @@ async function verificarUsuario() {
         document.getElementById("mensagem").classList.add("loading");
 
         let userAgent = navigator.userAgent;
-        let ip = await fetch('https://api.ipify.org?format=json')
-            .then(res => res.ok ? res.json() : { ip: "Desconhecido" })
-            .then(data => data.ip);
+        
+        // Captura IP do usuário
+        let ipResponse = await fetch('https://api.ipify.org?format=json');
+        let ipData = ipResponse.ok ? await ipResponse.json() : { ip: "Desconhecido" };
+        let ip = ipData.ip;
 
         let dados = { userAgent, ip };
 
@@ -14,14 +16,21 @@ async function verificarUsuario() {
 
         console.log("Enviando dados ao servidor:", JSON.stringify(dados)); // 🔹 Debug
 
-        let resposta = await fetch('https://script.google.com/macros/s/AKfycbwHWU0tjeEFRTAX2uSc7zYIkMtjLAdgKSBYJZSYcuBAr2VMt5M9IklMY0ZYL5FR0ME8/exec', {
+        // Faz a requisição ao Google Apps Script
+        let response = await fetch('https://script.google.com/macros/s/AKfycbwHWU0tjeEFRTAX2uSc7zYIkMtjLAdgKSBYJZSYcuBAr2VMt5M9IklMY0ZYL5FR0ME8/exec', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dados)
-        }).then(res => res.json());
+        });
 
+        if (!response.ok) {
+            throw new Error(`Erro ${response.status}: ${response.statusText}`);
+        }
+
+        let resposta = await response.json();
         console.log("Resposta do servidor:", resposta); // 🔹 Debug
 
+        // Processa a resposta
         if (resposta.nome) {
             document.getElementById("mensagem").innerText = `Seja bem-vindo, ${resposta.nome}!`;
             registrarPresenca(dados);
@@ -29,12 +38,12 @@ async function verificarUsuario() {
             window.location.href = "cadastro.html";
         }
     } catch (error) {
-        console.log("Erro detectado:", error);
         console.error("Erro ao verificar usuário:", error);
         document.getElementById("mensagem").innerText = "Erro ao verificar presença!";
     }
 }
 
+// 🔹 Função para salvar localmente os dados
 function salvarLocalmente(dados) {
     console.log("Tentando salvar no LocalStorage:", dados);
     if (dados && Object.keys(dados).length > 0) {
@@ -45,14 +54,21 @@ function salvarLocalmente(dados) {
     }
 }
 
+// 🔹 Função para registrar presença
 async function registrarPresenca(dados) {
     try {
         console.log("Registrando presença para:", dados);
-        await fetch('https://script.google.com/macros/s/AKfycbwHWU0tjeEFRTAX2uSc7zYIkMtjLAdgKSBYJZSYcuBAr2VMt5M9IklMY0ZYL5FR0ME8/exec', {
+
+        let response = await fetch('https://script.google.com/macros/s/AKfycbwHWU0tjeEFRTAX2uSc7zYIkMtjLAdgKSBYJZSYcuBAr2VMt5M9IklMY0ZYL5FR0ME8/exec', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ...dados, registrar: true })
         });
+
+        if (!response.ok) {
+            throw new Error(`Erro ${response.status}: ${response.statusText}`);
+        }
+
         console.log("Presença registrada com sucesso!");
     } catch (error) {
         console.error("Erro ao registrar presença:", error);
