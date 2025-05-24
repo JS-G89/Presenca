@@ -4,7 +4,7 @@ async function verificarUsuario() {
         document.getElementById("mensagem").classList.add("loading");
 
         let userAgent = navigator.userAgent;
-        let ip = await fetch('https://api64.ipify.org?format=json')
+        let ip = await fetch('https://api.ipify.org?format=json')
             .then(res => res.ok ? res.json() : { ip: "Desconhecido" })
             .then(data => data.ip);
 
