@@ -1,35 +1,28 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Presença</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 50px;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            color: #2E86C1;
-        }
-        #mensagem {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-        }
-        .loading {
-            font-style: italic;
-            color: #888;
-        }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        input, button { margin: 10px; padding: 10px; font-size: 16px; }
+        #resultado { margin-top: 20px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <h1>Registro de Presença</h1>
-    <p id="mensagem" class="loading">Verificando...</p>
 
-    <!-- Importação do JavaScript separado -->
+    <h1>Registro de Presença</h1>
+    <form id="registroForm">
+        <input type="text" id="nome" placeholder="Seu Nome" required>
+        <button type="submit">Registrar Presença</button>
+    </form>
+    
+    <button id="consultarBtn">Consultar Registros</button>
+    <div id="resultado"></div>
+
+    <!-- Adiciona o script externo -->
     <script src="script.js"></script>
+
 </body>
 </html>
