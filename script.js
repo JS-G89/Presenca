@@ -1,10 +1,8 @@
 document.addEventListener("DOMContentLoaded", async function() {
     const mensagem = document.getElementById("mensagem");
-
+    
     try {
         mensagem.innerText = "Verificando usuário...";
-        mensagem.classList.add("loading");
-
         let userAgent = navigator.userAgent;
         
         // 🔹 Captura o IP do usuário
@@ -14,8 +12,6 @@ document.addEventListener("DOMContentLoaded", async function() {
         let ip = ipData.ip || "Desconhecido";
 
         let dados = { userAgent, ip };
-
-        salvarLocalmente(dados);
 
         console.log("🔹 Enviando dados ao servidor:", JSON.stringify(dados));
 
@@ -31,12 +27,12 @@ document.addEventListener("DOMContentLoaded", async function() {
         let resposta = await response.json();
         console.log("🔹 Resposta do servidor:", resposta);
 
-        // 🔹 Se o usuário existir, registrar presença. Senão, redirecionar para cadastro.
         if (resposta && resposta.nome) {
             mensagem.innerText = `Seja bem-vindo, ${resposta.nome}!`;
             registrarPresenca(dados);
         } else {
-            window.location.href = "cadastro.html";
+            mensagem.innerText = "Usuário não encontrado. Redirecionando...";
+            setTimeout(() => window.location.href = "cadastro.html", 3000);
         }
     } catch (error) {
         console.error("Erro ao verificar usuário:", error);
@@ -44,26 +40,9 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
 });
 
-// 🔹 Função para salvar localmente os dados
-function salvarLocalmente(dados) {
-    try {
-        console.log("🔹 Salvando no LocalStorage:", dados);
-        if (dados && Object.keys(dados).length > 0) {
-            localStorage.setItem("registroUsuario", JSON.stringify(dados));
-            console.log("🔹 Dados salvos no LocalStorage com sucesso!");
-        } else {
-            console.warn("⚠️ Erro: Dados estão vazios ou indefinidos!");
-        }
-    } catch (error) {
-        console.error("Erro ao salvar no LocalStorage:", error);
-    }
-}
-
 // 🔹 Função para registrar presença
 async function registrarPresenca(dados) {
     try {
-        console.log("🔹 Registrando presença para:", dados);
-
         let response = await fetch('https://script.google.com/macros/s/AKfycbxdgGvOoWhAVHlMrdkRXhKUQeONiy0Jj8dHGqzQZQhRB1TeripXzNAj0w8Xre6VXNnt/exec', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -77,3 +56,16 @@ async function registrarPresenca(dados) {
         console.error("Erro ao registrar presença:", error);
     }
 }
+
+// 🔹 Consultar registros
+document.getElementById("consultarBtn").addEventListener("click", async function() {
+    try {
+        let resposta = await fetch("https://script.google.com/macros/s/AKfycbxdgGvOoWhAVHlMrdkRXhKUQeONiy0Jj8dHGqzQZQhRB1TeripXzNAj0w8Xre6VXNnt/exec");
+        if (!resposta.ok) throw new Error("Erro ao consultar registros.");
+        
+        let dados = await resposta.json();
+        document.getElementById("resultado").innerHTML = JSON.stringify(dados, null, 2);
+    } catch (error) {
+        console.error("Erro ao consultar registros:", error);
+    }
+});
