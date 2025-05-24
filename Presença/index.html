@@ -10,7 +10,7 @@
             let ip = await fetch('https://api64.ipify.org?format=json').then(res => res.json()).then(data => data.ip);
             let dados = { userAgent, ip };
 
-            let resposta = await fetch('https://script.google.com/macros/s/SEU_SCRIPT_ID/exec', {
+            let resposta = await fetch('https://script.google.com/macros/s/AKfycbwIArM9lR4Pq19_FBuwdkoqG6G5_bmomJ8XVSqpsFCsYGgCge07w8bVCMONCrLk0pIL/exec', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dados)
