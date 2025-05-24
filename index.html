@@ -36,7 +36,7 @@
                     .then(data => data.ip);
 
                 let dados = { userAgent, ip };
-                let resposta = await fetch('https://script.google.com/macros/s/AKfycby0l43VNXCcsKkwWB6VVEAaLC3z1RsU21DENwXknVpEEzYlAi0s-n7sx1-kKaGGJXba/exec', {
+                let resposta = await fetch('https://script.google.com/macros/s/AKfycbxWSIz-Xjx4j9Gpfp7LqO4n6VhekfpDktUi3VlQw_zmTLK2SDi19-sYl7-XGp1nrWy4/exec', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dados)
@@ -56,7 +56,7 @@
 
         async function registrarPresenca(dados) {
             try {
-                await fetch('https://script.google.com/macros/s/AKfycby0l43VNXCcsKkwWB6VVEAaLC3z1RsU21DENwXknVpEEzYlAi0s-n7sx1-kKaGGJXba/exec', {
+                await fetch('https://script.google.com/macros/s/AKfycbxWSIz-Xjx4j9Gpfp7LqO4n6VhekfpDktUi3VlQw_zmTLK2SDi19-sYl7-XGp1nrWy4/exec', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ...dados, registrar: true })
