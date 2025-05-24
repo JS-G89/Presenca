@@ -1,7 +1,44 @@
-fetch("https://script.google.com/macros/s/AKfycbxWSIz-Xjx4j9Gpfp7LqO4n6VhekfpDktUi3VlQw_zmTLK2SDi19-sYl7-XGp1nrWy4/exec", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ ip: "192.168.1.1", userAgent: navigator.userAgent, registrar: true })
-}).then(res => res.json())
-  .then(data => console.log("Resposta do Script:", data))
-  .catch(error => console.error("Erro na requisição:", error));
+async function verificarUsuario() {
+    try {
+        document.getElementById("mensagem").innerText = "Verificando...";
+        document.getElementById("mensagem").classList.add("loading");
+
+        let userAgent = navigator.userAgent;
+        let ip = await fetch('https://api64.ipify.org?format=json')
+            .then(res => res.ok ? res.json() : { ip: "Desconhecido" })
+            .then(data => data.ip);
+
+        let dados = { userAgent, ip };
+
+        let resposta = await fetch('https://script.google.com/macros/s/AKfycbzR064RZ1a8nWDO56eQOqxSHjXM53tTudJk1mBSigLSOWBxZLbsLwLNx2OTGBip0nLz/exec', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dados)
+        }).then(res => res.json());
+
+        if (resposta.nome) {
+            document.getElementById("mensagem").innerText = `Seja bem-vindo, ${resposta.nome}!`;
+            registrarPresenca(dados);
+        } else {
+            window.location.href = "cadastro.html";
+        }
+    } catch (error) {
+        console.error("Erro ao verificar usuário:", error);
+        document.getElementById("mensagem").innerText = "Erro ao verificar presença!";
+    }
+}
+
+async function registrarPresenca(dados) {
+    try {
+        await fetch('https://script.google.com/macros/s/AKfycbzR064RZ1a8nWDO56eQOqxSHjXM53tTudJk1mBSigLSOWBxZLbsLwLNx2OTGBip0nLz/exec', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...dados, registrar: true })
+        });
+    } catch (error) {
+        console.error("Erro ao registrar presença:", error);
+    }
+}
+
+// ✅ A função será executada automaticamente quando a página carregar
+window.onload = verificarUsuario;
