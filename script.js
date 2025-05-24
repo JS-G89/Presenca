@@ -17,7 +17,7 @@ async function verificarUsuario() {
         console.log("Enviando dados ao servidor:", JSON.stringify(dados)); // 🔹 Debug
 
         // Faz a requisição ao Google Apps Script
-        let response = await fetch('https://script.google.com/macros/s/AKfycbwHWU0tjeEFRTAX2uSc7zYIkMtjLAdgKSBYJZSYcuBAr2VMt5M9IklMY0ZYL5FR0ME8/exec', {
+        let response = await fetch('https://script.google.com/macros/s/AKfycbxdgGvOoWhAVHlMrdkRXhKUQeONiy0Jj8dHGqzQZQhRB1TeripXzNAj0w8Xre6VXNnt/exec', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dados)
@@ -59,7 +59,7 @@ async function registrarPresenca(dados) {
     try {
         console.log("Registrando presença para:", dados);
 
-        let response = await fetch('https://script.google.com/macros/s/AKfycbwHWU0tjeEFRTAX2uSc7zYIkMtjLAdgKSBYJZSYcuBAr2VMt5M9IklMY0ZYL5FR0ME8/exec', {
+        let response = await fetch('https://script.google.com/macros/s/AKfycbxdgGvOoWhAVHlMrdkRXhKUQeONiy0Jj8dHGqzQZQhRB1TeripXzNAj0w8Xre6VXNnt/exec', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ...dados, registrar: true })
